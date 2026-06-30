@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block titulo %}Editar Cliente | Sistema Bancario{% endblock %}
+
+{% block contenido %}
+
+<section class="page-title">
+    <div>
+        <p class="eyebrow">Actualización</p>
+        <h2>Editar Cliente</h2>
+        <p>Modifica los datos del cliente seleccionado y guarda los cambios.</p>
+    </div>
+    <a class="btn-secondary" href="/">Volver a clientes</a>
+</section>
+
+<section class="card form-card">
+    <div class="card-header">
+        <div>
+            <p class="eyebrow">Cliente #{{ cliente.id_cliente }}</p>
+            <h3>{{ cliente.nombres }} {{ cliente.apellidos }}</h3>
+        </div>
+        <span class="card-icon">✏️</span>
+    </div>
+
+    <form class="form-grid" method="POST">
+        <div class="field">
+            <label>Cédula</label>
+            <input type="text" name="cedula" value="{{ cliente.cedula }}" required>
+        </div>
+        <div class="field">
+            <label>Nombres</label>
+            <input type="text" name="nombres" value="{{ cliente.nombres }}" required>
+        </div>
+        <div class="field">
+            <label>Apellidos</label>
+            <input type="text" name="apellidos" value="{{ cliente.apellidos }}" required>
+        </div>
+        <div class="field">
+            <label>Fecha de nacimiento</label>
+            <input type="date" name="fecha_nacimiento" value="{{ cliente.fecha_nacimiento }}" required>
+        </div>
+        <div class="field field-wide">
+            <label>Dirección</label>
+            <input type="text" name="direccion" value="{{ cliente.direccion }}">
+        </div>
+        <div class="field">
+            <label>Teléfono</label>
+            <input type="text" name="telefono" value="{{ cliente.telefono }}">
+        </div>
+        <div class="field">
+            <label>Correo electrónico</label>
+            <input type="email" name="correo" value="{{ cliente.correo }}">
+        </div>
+        <div class="form-actions field-wide">
+            <button type="submit">Actualizar cliente</button>
+        </div>
+    </form>
+</section>
+
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block titulo %}Reportes | Sistema Bancario{% endblock %}
+
+{% block contenido %}
+
+<section class="page-hero reports-hero">
+    <div>
+        <p class="eyebrow">Módulo 5</p>
+        <h2>Reportes Financieros</h2>
+        <p>Panel ejecutivo con indicadores principales, clientes con mayor saldo e historial general de movimientos.</p>
+    </div>
+    <div class="hero-metric">
+        <span>📊</span>
+        <strong>Dashboard</strong>
+        <small>Información actualizada desde Neon PostgreSQL</small>
+    </div>
+</section>
+
+<section class="resumen dashboard-grid">
+    <div class="dato">
+        <span class="metric-icon">👥</span>
+        <h3>Clientes registrados</h3>
+        <p>{{ clientes_registrados }}</p>
+    </div>
+
+    <div class="dato">
+        <span class="metric-icon">💳</span>
+        <h3>Cuentas activas</h3>
+        <p>{{ cuentas_activas }}</p>
+    </div>
+
+    <div class="dato">
+        <span class="metric-icon">⬆️</span>
+        <h3>Total depósitos</h3>
+        <p>${{ total_depositos }}</p>
+    </div>
+
+    <div class="dato">
+        <span class="metric-icon">⬇️</span>
+        <h3>Total retiros</h3>
+        <p>${{ total_retiros }}</p>
+    </div>
+
+    <div class="dato">
+        <span class="metric-icon">📄</span>
+        <h3>Total préstamos</h3>
+        <p>${{ total_prestamos }}</p>
+    </div>
+</section>
+
+<section class="grid-2 report-grid">
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <p class="eyebrow">Ranking</p>
+                <h3>Clientes con mayor saldo</h3>
+            </div>
+            <span class="card-icon">🏆</span>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Número de Cuenta</th>
+                        <th>Saldo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in mayores_saldos %}
+                    <tr>
+                        <td>{{ c.nombres }} {{ c.apellidos }}</td>
+                        <td>{{ c.numero_cuenta }}</td>
+                        <td class="money">${{ c.saldo_inicial }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card accent-card">
+        <div class="card-header">
+            <div>
+                <p class="eyebrow">Resumen</p>
+                <h3>Lectura rápida</h3>
+            </div>
+            <span class="card-icon">⚡</span>
+        </div>
+        <div class="report-notes">
+            <p><strong>{{ clientes_registrados }}</strong> clientes registrados en el sistema.</p>
+            <p><strong>{{ cuentas_activas }}</strong> cuentas se encuentran activas.</p>
+            <p>Los movimientos se muestran desde el más reciente hasta el más antiguo.</p>
+        </div>
+    </div>
+</section>
+
+<section class="card">
+    <div class="card-header">
+        <div>
+            <p class="eyebrow">Historial general</p>
+            <h3>Movimientos financieros</h3>
+        </div>
+        <span class="card-icon">📜</span>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cuenta</th>
+                    <th>Tipo</th>
+                    <th>Monto</th>
+                    <th>Fecha</th>
+                    <th>Descripción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in movimientos %}
+                <tr>
+                    <td><span class="id-pill">#{{ m.id_transaccion }}</span></td>
+                    <td>{{ m.numero_cuenta }}</td>
+                    <td><span class="badge {% if m.tipo == 'Deposito' or m.tipo == 'Transferencia Entrada' %}success{% elif m.tipo == 'Retiro' or m.tipo == 'Transferencia Salida' %}danger{% else %}neutral{% endif %}">{{ m.tipo }}</span></td>
+                    <td class="money">${{ m.monto }}</td>
+                    <td>{{ m.fecha }}</td>
+                    <td>{{ m.descripcion }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+{% endblock %}

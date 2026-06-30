@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% block titulo %}Transacciones | Sistema Bancario{% endblock %}
+
+{% block contenido %}
+
+<section class="page-title">
+    <div>
+        <p class="eyebrow">Módulo 3</p>
+        <h2>Gestión de Transacciones</h2>
+        <p>Registra depósitos, retiros y transferencias con control de saldo disponible.</p>
+    </div>
+    <div class="title-chip">{{ transacciones|length }} movimientos</div>
+</section>
+
+<section class="operation-grid">
+    <div class="card operation deposit">
+        <div class="card-header">
+            <div>
+                <p class="eyebrow">Ingreso</p>
+                <h3>Registrar Depósito</h3>
+            </div>
+            <span class="card-icon">⬆️</span>
+        </div>
+        <form class="form-stack" action="/deposito" method="POST">
+            <div class="field">
+                <label>Cuenta</label>
+                <select name="id_cuenta" required>
+                    {% for cuenta in cuentas %}
+                    <option value="{{ cuenta.id_cuenta }}">
+                        {{ cuenta.numero_cuenta }} - {{ cuenta.nombres }} {{ cuenta.apellidos }} - ${{ cuenta.saldo_inicial }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="field">
+                <label>Valor depositado</label>
+                <input type="number" step="0.01" name="monto" placeholder="0.00" required>
+            </div>
+            <div class="field">
+                <label>Fecha</label>
+                <input type="date" name="fecha" required>
+            </div>
+            <button type="submit">Registrar depósito</button>
+        </form>
+    </div>
+
+    <div class="card operation withdraw">
+        <div class="card-header">
+            <div>
+                <p class="eyebrow">Salida</p>
+                <h3>Registrar Retiro</h3>
+            </div>
+            <span class="card-icon">⬇️</span>
+        </div>
+        <form class="form-stack" action="/retiro" method="POST">
+            <div class="field">
+                <label>Cuenta</label>
+                <select name="id_cuenta" required>
+                    {% for cuenta in cuentas %}
+                    <option value="{{ cuenta.id_cuenta }}">
+                        {{ cuenta.numero_cuenta }} - {{ cuenta.nombres }} {{ cuenta.apellidos }} - ${{ cuenta.saldo_inicial }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="field">
+                <label>Valor retirado</label>
+                <input type="number" step="0.01" name="monto" placeholder="0.00" required>
+            </div>
+            <div class="field">
+                <label>Fecha</label>
+                <input type="date" name="fecha" required>
+            </div>
+            <button type="submit">Registrar retiro</button>
+        </form>
+    </div>
+
+    <div class="card operation transfer">
+        <div class="card-header">
+            <div>
+                <p class="eyebrow">Movimiento</p>
+                <h3>Registrar Transferencia</h3>
+            </div>
+            <span class="card-icon">🔁</span>
+        </div>
+        <form class="form-stack" action="/transferencia" method="POST">
+            <div class="field">
+                <label>Cuenta origen</label>
+                <select name="cuenta_origen" required>
+                    {% for cuenta in cuentas %}
+                    <option value="{{ cuenta.id_cuenta }}">
+                        {{ cuenta.numero_cuenta }} - {{ cuenta.nombres }} {{ cuenta.apellidos }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="field">
+                <label>Cuenta destino</label>
+                <select name="cuenta_destino" required>
+                    {% for cuenta in cuentas %}
+                    <option value="{{ cuenta.id_cuenta }}">
+                        {{ cuenta.numero_cuenta }} - {{ cuenta.nombres }} {{ cuenta.apellidos }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="field-group">
+                <div class="field">
+                    <label>Valor</label>
+                    <input type="number" step="0.01" name="monto" placeholder="0.00" required>
+                </div>
+                <div class="field">
+                    <label>Fecha</label>
+                    <input type="date" name="fecha" required>
+                </div>
+            </div>
+            <button type="submit">Registrar transferencia</button>
+        </form>
+    </div>
+</section>
+
+<section class="card">
+    <div class="card-header">
+        <div>
+            <p class="eyebrow">Auditoría</p>
+            <h3>Historial de Movimientos</h3>
+        </div>
+        <span class="card-icon">📜</span>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cuenta</th>
+                    <th>Tipo</th>
+                    <th>Monto</th>
+                    <th>Fecha</th>
+                    <th>Descripción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in transacciones %}
+                <tr>
+                    <td><span class="id-pill">#{{ t.id_transaccion }}</span></td>
+                    <td>{{ t.numero_cuenta }}</td>
+                    <td><span class="badge {% if t.tipo == 'Deposito' or t.tipo == 'Transferencia Entrada' %}success{% elif t.tipo == 'Retiro' or t.tipo == 'Transferencia Salida' %}danger{% else %}neutral{% endif %}">{{ t.tipo }}</span></td>
+                    <td class="money">${{ t.monto }}</td>
+                    <td>{{ t.fecha }}</td>
+                    <td>{{ t.descripcion }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+{% endblock %}

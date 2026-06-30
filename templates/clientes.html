@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% block titulo %}Clientes | Sistema Bancario{% endblock %}
+
+{% block contenido %}
+
+<section class="page-hero">
+    <div>
+        <p class="eyebrow">Módulo 1</p>
+        <h2>Gestión de Clientes</h2>
+        <p>Registra, consulta, actualiza y elimina clientes del banco de forma rápida y organizada.</p>
+    </div>
+    <img class="hero-img" src="{{ url_for('static', filename='img/bank-hero.svg') }}" alt="Ilustración bancaria">
+</section>
+
+<section class="quick-stats">
+    <div class="stat-card">
+        <span>👥</span>
+        <div>
+            <p>Clientes en pantalla</p>
+            <strong>{{ clientes|length }}</strong>
+        </div>
+    </div>
+    <div class="stat-card">
+        <span>🔎</span>
+        <div>
+            <p>Búsqueda</p>
+            <strong>Por cédula</strong>
+        </div>
+    </div>
+    <div class="stat-card">
+        <span>🛡️</span>
+        <div>
+            <p>Validación</p>
+            <strong>Cédula única</strong>
+        </div>
+    </div>
+</section>
+
+<section class="grid-2">
+    <div class="card elevated">
+        <div class="card-header">
+            <div>
+                <p class="eyebrow">Consulta</p>
+                <h3>Buscar cliente</h3>
+            </div>
+            <span class="card-icon">🔎</span>
+        </div>
+
+        <form class="form-inline" method="GET" action="/">
+            <div class="field grow">
+                <label>Cédula</label>
+                <input type="text" name="cedula" placeholder="Ejemplo: 0912345678">
+            </div>
+            <button type="submit">Buscar</button>
+            <a class="btn-secondary" href="/">Ver todos</a>
+        </form>
+    </div>
+
+    <div class="card elevated accent-card">
+        <div class="card-header">
+            <div>
+                <p class="eyebrow">Información</p>
+                <h3>Control de clientes</h3>
+            </div>
+            <span class="card-icon">🏦</span>
+        </div>
+        <p class="muted">Este módulo evita cédulas duplicadas y permite administrar la información personal de cada cliente.</p>
+    </div>
+</section>
+
+<section class="card">
+    <div class="card-header">
+        <div>
+            <p class="eyebrow">Nuevo registro</p>
+            <h3>Registrar cliente</h3>
+        </div>
+        <span class="card-icon">➕</span>
+    </div>
+
+    <form class="form-grid" action="/agregar_cliente" method="POST">
+        <div class="field">
+            <label>Cédula</label>
+            <input type="text" name="cedula" placeholder="Cédula" required>
+        </div>
+        <div class="field">
+            <label>Nombres</label>
+            <input type="text" name="nombres" placeholder="Nombres" required>
+        </div>
+        <div class="field">
+            <label>Apellidos</label>
+            <input type="text" name="apellidos" placeholder="Apellidos" required>
+        </div>
+        <div class="field">
+            <label>Fecha de nacimiento</label>
+            <input type="date" name="fecha_nacimiento" required>
+        </div>
+        <div class="field field-wide">
+            <label>Dirección</label>
+            <input type="text" name="direccion" placeholder="Dirección domiciliaria">
+        </div>
+        <div class="field">
+            <label>Teléfono</label>
+            <input type="text" name="telefono" placeholder="Teléfono">
+        </div>
+        <div class="field">
+            <label>Correo electrónico</label>
+            <input type="email" name="correo" placeholder="correo@ejemplo.com">
+        </div>
+        <div class="form-actions field-wide">
+            <button type="submit">Guardar cliente</button>
+        </div>
+    </form>
+</section>
+
+<section class="card">
+    <div class="card-header">
+        <div>
+            <p class="eyebrow">Base de datos</p>
+            <h3>Lista de clientes</h3>
+        </div>
+        <span class="card-icon">📋</span>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cédula</th>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Fecha nacimiento</th>
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
+                    <th>Correo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in clientes %}
+                <tr>
+                    <td><span class="id-pill">#{{ c.id_cliente }}</span></td>
+                    <td>{{ c.cedula }}</td>
+                    <td>{{ c.nombres }}</td>
+                    <td>{{ c.apellidos }}</td>
+                    <td>{{ c.fecha_nacimiento }}</td>
+                    <td>{{ c.direccion }}</td>
+                    <td>{{ c.telefono }}</td>
+                    <td>{{ c.correo }}</td>
+                    <td class="actions">
+                        <a class="action edit" href="/editar/{{ c.id_cliente }}">Editar</a>
+                        <a class="action danger" href="/eliminar/{{ c.id_cliente }}" data-confirm="¿Seguro que deseas eliminar este cliente?">Eliminar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+{% endblock %}

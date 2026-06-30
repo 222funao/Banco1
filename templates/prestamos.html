@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% block titulo %}Préstamos | Sistema Bancario{% endblock %}
+
+{% block contenido %}
+
+<section class="page-title">
+    <div>
+        <p class="eyebrow">Módulo 4</p>
+        <h2>Gestión de Préstamos</h2>
+        <p>Registra solicitudes, consulta préstamos y actualiza su estado financiero.</p>
+    </div>
+    <div class="title-chip">{{ prestamos|length }} préstamos</div>
+</section>
+
+<section class="grid-2">
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <p class="eyebrow">Solicitud</p>
+                <h3>Registrar Préstamo</h3>
+            </div>
+            <span class="card-icon">📄</span>
+        </div>
+
+        <form class="form-grid compact" action="/agregar_prestamo" method="POST">
+            <div class="field field-wide">
+                <label>Cliente</label>
+                <select name="id_cliente" required>
+                    {% for cliente in clientes %}
+                    <option value="{{ cliente.id_cliente }}">
+                        {{ cliente.nombres }} {{ cliente.apellidos }} - {{ cliente.cedula }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="field">
+                <label>Monto solicitado</label>
+                <input type="number" step="0.01" name="monto" placeholder="0.00" required>
+            </div>
+            <div class="field">
+                <label>Tasa de interés</label>
+                <input type="number" step="0.01" name="interes" placeholder="Ejemplo: 12.5" required>
+            </div>
+            <div class="field">
+                <label>Plazo en meses</label>
+                <input type="number" name="plazo" placeholder="12" required>
+            </div>
+            <div class="field">
+                <label>Estado</label>
+                <select name="estado" required>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Aprobado">Aprobado</option>
+                    <option value="Rechazado">Rechazado</option>
+                </select>
+            </div>
+            <div class="form-actions field-wide">
+                <button type="submit">Registrar préstamo</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card elevated accent-card loan-info">
+        <div class="card-header">
+            <div>
+                <p class="eyebrow">Control</p>
+                <h3>Estados del préstamo</h3>
+            </div>
+            <span class="card-icon">🧾</span>
+        </div>
+        <div class="steps">
+            <div><span class="badge warning">Pendiente</span><p>Solicitud registrada y en revisión.</p></div>
+            <div><span class="badge success">Aprobado</span><p>Crédito aceptado por la entidad.</p></div>
+            <div><span class="badge danger">Rechazado</span><p>Solicitud no aceptada.</p></div>
+        </div>
+    </div>
+</section>
+
+<section class="card">
+    <div class="card-header">
+        <div>
+            <p class="eyebrow">Registros</p>
+            <h3>Lista de Préstamos</h3>
+        </div>
+        <span class="card-icon">📋</span>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Monto</th>
+                    <th>Interés</th>
+                    <th>Plazo</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in prestamos %}
+                <tr>
+                    <td><span class="id-pill">#{{ p.id_prestamo }}</span></td>
+                    <td>{{ p.nombres }} {{ p.apellidos }}</td>
+                    <td class="money">${{ p.monto }}</td>
+                    <td>{{ p.interes }}%</td>
+                    <td>{{ p.plazo }} meses</td>
+                    <td><span class="badge {% if p.estado == 'Aprobado' %}success{% elif p.estado == 'Rechazado' %}danger{% else %}warning{% endif %}">{{ p.estado }}</span></td>
+                    <td class="actions wide-actions">
+                        <a class="action success" href="/estado_prestamo/{{ p.id_prestamo }}/Aprobado">Aprobar</a>
+                        <a class="action danger" href="/estado_prestamo/{{ p.id_prestamo }}/Rechazado">Rechazar</a>
+                        <a class="action warning" href="/estado_prestamo/{{ p.id_prestamo }}/Pendiente">Pendiente</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+{% endblock %}

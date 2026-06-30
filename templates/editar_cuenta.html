@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block titulo %}Editar Cuenta | Sistema Bancario{% endblock %}
+
+{% block contenido %}
+
+<section class="page-title">
+    <div>
+        <p class="eyebrow">Actualización</p>
+        <h2>Editar Cuenta</h2>
+        <p>Actualiza los datos de la cuenta bancaria seleccionada.</p>
+    </div>
+    <a class="btn-secondary" href="/cuentas">Volver a cuentas</a>
+</section>
+
+<section class="card form-card">
+    <div class="card-header">
+        <div>
+            <p class="eyebrow">Cuenta #{{ cuenta.id_cuenta }}</p>
+            <h3>{{ cuenta.numero_cuenta }}</h3>
+        </div>
+        <span class="card-icon">✏️</span>
+    </div>
+
+    <form class="form-grid" method="POST">
+        <div class="field">
+            <label>Número de cuenta</label>
+            <input type="text" name="numero_cuenta" value="{{ cuenta.numero_cuenta }}" required>
+        </div>
+        <div class="field">
+            <label>Tipo de cuenta</label>
+            <select name="tipo_cuenta">
+                <option value="Ahorros" {% if cuenta.tipo_cuenta == 'Ahorros' %}selected{% endif %}>Ahorros</option>
+                <option value="Corriente" {% if cuenta.tipo_cuenta == 'Corriente' %}selected{% endif %}>Corriente</option>
+            </select>
+        </div>
+        <div class="field">
+            <label>Fecha de apertura</label>
+            <input type="date" name="fecha_apertura" value="{{ cuenta.fecha_apertura }}" required>
+        </div>
+        <div class="field">
+            <label>Saldo</label>
+            <input type="number" step="0.01" name="saldo_inicial" value="{{ cuenta.saldo_inicial }}" required>
+        </div>
+        <div class="field">
+            <label>Estado</label>
+            <select name="estado">
+                <option value="Activa" {% if cuenta.estado == 'Activa' %}selected{% endif %}>Activa</option>
+                <option value="Cerrada" {% if cuenta.estado == 'Cerrada' %}selected{% endif %}>Cerrada</option>
+            </select>
+        </div>
+        <div class="form-actions field-wide">
+            <button type="submit">Actualizar cuenta</button>
+        </div>
+    </form>
+</section>
+
+{% endblock %}

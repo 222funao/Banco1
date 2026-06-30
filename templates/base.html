@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titulo %}Sistema Bancario{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="app">
+    <aside class="sidebar">
+        <a class="brand" href="/">
+            <img src="{{ url_for('static', filename='img/logo-banco.svg') }}" alt="Logo del banco">
+            <div>
+                <span>Banco Pro</span>
+                <small>Gestión Web</small>
+            </div>
+        </a>
+
+        <nav class="menu">
+            <a class="menu-link {% if request.path == '/' %}active{% endif %}" href="/">
+                <span class="icon">👥</span>
+                <span>Clientes</span>
+            </a>
+            <a class="menu-link {% if request.path.startswith('/cuentas') or request.path.startswith('/editar_cuenta') %}active{% endif %}" href="/cuentas">
+                <span class="icon">💳</span>
+                <span>Cuentas</span>
+            </a>
+            <a class="menu-link {% if request.path.startswith('/transacciones') %}active{% endif %}" href="/transacciones">
+                <span class="icon">🔁</span>
+                <span>Transacciones</span>
+            </a>
+            <a class="menu-link {% if request.path.startswith('/prestamos') %}active{% endif %}" href="/prestamos">
+                <span class="icon">📄</span>
+                <span>Préstamos</span>
+            </a>
+            <a class="menu-link {% if request.path.startswith('/reportes') %}active{% endif %}" href="/reportes">
+                <span class="icon">📊</span>
+                <span>Reportes</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-card">
+            <strong>Sistema activo</strong>
+            <p>MySQL + Python Flask</p>
+            <span class="status-dot"></span> Conectado localmente
+        </div>
+    </aside>
+
+    <div class="content-area">
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">Proyecto Integrador</p>
+                <h1>Sistema de Gestión Bancaria Web</h1>
+            </div>
+            <div class="topbar-badge">
+                <span>🏦</span>
+                <div>
+                    <strong>Banco Local</strong>
+                    <small>Panel administrativo</small>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            {% if mensaje %}
+                <div class="alert {% if 'Error' in mensaje or 'No se puede' in mensaje %}alert-error{% else %}alert-success{% endif %}">
+                    <span>{% if 'Error' in mensaje or 'No se puede' in mensaje %}⚠️{% else %}✅{% endif %}</span>
+                    <p>{{ mensaje }}</p>
+                </div>
+            {% endif %}
+
+            {% block contenido %}{% endblock %}
+        </main>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
