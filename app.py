@@ -346,9 +346,12 @@ def deposito():
     id_cuenta = datos['id_cuenta']
     monto = float(datos['monto'])
     fecha = datos['fecha']
+    descripcion = datos.get('descripcion', '').strip() or 'Deposito realizado'
 
     if monto <= 0:
         return volver('/transacciones', 'Error: no se permiten depositos negativos o en cero')
+    if len(descripcion) > 255:
+        return volver('/transacciones', 'Error: la descripcion no puede superar 255 caracteres')
 
     conexion = conectar()
     cursor = conexion.cursor()
@@ -360,8 +363,8 @@ def deposito():
 
     cursor.execute("""
         INSERT INTO transacciones (id_cuenta, tipo, monto, fecha, descripcion)
-        VALUES (%s, 'Deposito', %s, %s, 'Deposito realizado')
-    """, (id_cuenta, monto, fecha))
+        VALUES (%s, 'Deposito', %s, %s, %s)
+    """, (id_cuenta, monto, fecha, descripcion))
 
     conexion.commit()
 
@@ -377,9 +380,12 @@ def retiro():
     id_cuenta = datos['id_cuenta']
     monto = float(datos['monto'])
     fecha = datos['fecha']
+    descripcion = datos.get('descripcion', '').strip() or 'Retiro realizado'
 
     if monto <= 0:
         return volver('/transacciones', 'Error: no se permiten retiros negativos o en cero')
+    if len(descripcion) > 255:
+        return volver('/transacciones', 'Error: la descripcion no puede superar 255 caracteres')
 
     conexion = conectar()
     cursor = conexion.cursor(dictionary=True)
@@ -404,8 +410,8 @@ def retiro():
 
     cursor.execute("""
         INSERT INTO transacciones (id_cuenta, tipo, monto, fecha, descripcion)
-        VALUES (%s, 'Retiro', %s, %s, 'Retiro realizado')
-    """, (id_cuenta, monto, fecha))
+        VALUES (%s, 'Retiro', %s, %s, %s)
+    """, (id_cuenta, monto, fecha, descripcion))
 
     conexion.commit()
 
